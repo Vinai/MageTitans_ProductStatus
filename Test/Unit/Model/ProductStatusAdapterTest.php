@@ -13,6 +13,7 @@ use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\NoSuchEntityException;
 use MageTitans\ProductStatus\Model\Exception\InvalidSkuException;
 use MageTitans\ProductStatus\Model\Exception\ProductAlreadyDisabledException;
+use MageTitans\ProductStatus\Model\Exception\ProductAlreadyEnabledException;
 use MageTitans\ProductStatus\Model\Exception\ProductStatusAdapterException;
 
 class ProductStatusAdapterTest extends \PHPUnit_Framework_TestCase
@@ -204,5 +205,43 @@ class ProductStatusAdapterTest extends \PHPUnit_Framework_TestCase
             $this->mockSearchCriteriaBuilder,
             $this->mockAppState
         );
+    }
+
+    public function testItThrowsAnExceptionIfTheSkuToEnableIsNotAString()
+    {
+        $this->setExpectedException(InvalidSkuException::class, 'The specified SKU has to be a string');
+        $this->productStatusAdapter->enableProductWithSku([]);
+    }
+
+    public function testItThrowsAnExceptionIfTheSkuToEnableIsEmpty()
+    {
+        $this->setExpectedException(InvalidSkuException::class, 'The specified SKU must not be empty');
+        $this->productStatusAdapter->enableProductWithSku(' ');
+    }
+
+    public function testItConvertsEntityNotFoundExceptionsToProductStatusCommandExceptionsForEnable()
+    {
+        $testException = new NoSuchEntityException();
+        $this->mockProductRepository->method('get')
+            ->willThrowException($testException);
+        $this->setExpectedException(ProductStatusAdapterException::class);
+
+        $this->productStatusAdapter->enableProductWithSku('test');
+    }
+
+    public function testItThrowsAnExceptionIfTheSpecifiedSkuAlreadyIsEnabled()
+    {
+        $this->setExpectedException(ProductAlreadyEnabledException::class, 'The product "test" already is enabled');
+        $this->mockProductRepository->method('get')->willReturn($this->createMockEnabledProduct('test'));
+        $this->productStatusAdapter->enableProductWithSku('test');
+    }
+    
+    public function testItEnablesADisabledProduct()
+    {
+        $mockProduct = $this->createMockDisabledProduct('test');
+        $mockProduct->expects($this->once())->method('setStatus')->with(ProductStatus::STATUS_ENABLED);
+        $this->mockProductRepository->method('get')->willReturn($mockProduct);
+        $this->mockProductRepository->expects($this->once())->method('save')->with($mockProduct);
+        $this->productStatusAdapter->enableProductWithSku('test');
     }
 }

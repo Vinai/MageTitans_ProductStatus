@@ -11,6 +11,7 @@ use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\NoSuchEntityException;
 use MageTitans\ProductStatus\Model\Exception\InvalidSkuException;
 use MageTitans\ProductStatus\Model\Exception\ProductAlreadyDisabledException;
+use MageTitans\ProductStatus\Model\Exception\ProductAlreadyEnabledException;
 use MageTitans\ProductStatus\Model\Exception\ProductStatusAdapterException;
 
 class ProductStatusAdapter implements ProductStatusAdapterInterface
@@ -91,9 +92,27 @@ class ProductStatusAdapter implements ProductStatusAdapterInterface
         try {
             $product = $this->productRepository->get($sku);
             if ($product->getStatus() === ProductStatus::STATUS_DISABLED) {
-                throw new ProductAlreadyDisabledException('The product "test" already is disabled');
+                throw new ProductAlreadyDisabledException(sprintf('The product "%s" already is disabled', $sku));
             }
             $product->setStatus(ProductStatus::STATUS_DISABLED);
+            $this->productRepository->save($product);
+        } catch (NoSuchEntityException $exception) {
+            throw new ProductStatusAdapterException($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param string $sku
+     */
+    public function enableProductWithSku($sku)
+    {
+        $this->validateSku($sku);
+        try {
+            $product = $this->productRepository->get($sku);
+            if ($product->getStatus() == ProductStatus::STATUS_ENABLED) {
+                throw new ProductAlreadyEnabledException(sprintf('The product "%s" already is enabled', $sku));
+            }
+            $product->setStatus(ProductStatus::STATUS_ENABLED);
             $this->productRepository->save($product);
         } catch (NoSuchEntityException $exception) {
             throw new ProductStatusAdapterException($exception->getMessage());

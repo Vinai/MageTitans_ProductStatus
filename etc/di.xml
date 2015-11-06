@@ -8,6 +8,7 @@
             <argument name="commands" xsi:type="array">
                 <item name="catalogProductStatus" xsi:type="object">MageTitans\ProductStatus\Console\Command\ShowProductStatusCommand</item>
                 <item name="catalogProductDisable" xsi:type="object">MageTitans\ProductStatus\Console\Command\DisableProductCommand</item>
+                <item name="catalogProductEnable" xsi:type="object">MageTitans\ProductStatus\Console\Command\EnableProductCommand</item>
             </argument>
         </arguments>
     </type>
