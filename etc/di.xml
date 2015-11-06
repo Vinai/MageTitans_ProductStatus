@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="MageTitans\ProductStatus\Model\ProductStatusAdapterInterface"
+                type="MageTitans\ProductStatus\Model\ProductStatusAdapter\Proxy"/>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="catalogProductStatus" xsi:type="object">MageTitans\ProductStatus\Console\Command\ShowProductStatusCommand</item>
+                <item name="catalogProductDisable" xsi:type="object">MageTitans\ProductStatus\Console\Command\DisableProductCommand</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
