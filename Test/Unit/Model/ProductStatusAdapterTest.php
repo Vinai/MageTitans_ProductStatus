@@ -244,4 +244,32 @@ class ProductStatusAdapterTest extends \PHPUnit_Framework_TestCase
         $this->mockProductRepository->expects($this->once())->method('save')->with($mockProduct);
         $this->productStatusAdapter->enableProductWithSku('test');
     }
+
+    public function testItThrowsAnExceptionIfTheSkuToGetIsNotAString()
+    {
+        $this->setExpectedException(InvalidSkuException::class, 'The specified SKU has to be a string');
+        $this->productStatusAdapter->getStatusForProductWithSku([]);
+    }
+
+    public function testItThrowsAnExceptionIfTheSkuToGetIsEmpty()
+    {
+        $this->setExpectedException(InvalidSkuException::class, 'The specified SKU must not be empty');
+        $this->productStatusAdapter->getStatusForProductWithSku(' ');
+    }
+
+    public function testItReturnsTheProductStatusString()
+    {
+        $this->mockProductRepository->method('get')->willReturnMap([
+            ['enabled_sku', false, null, false, $this->createMockEnabledProduct('enabled_sku')],
+            ['disabled_sku', false, null, false, $this->createMockDisabledProduct('disabled_sku')],
+        ]);
+        $this->assertSame(
+            ProductStatusAdapterInterface::ENABLED,
+            $this->productStatusAdapter->getStatusForProductWithSku('enabled_sku')
+        );
+        $this->assertSame(
+            ProductStatusAdapterInterface::DISABLED,
+            $this->productStatusAdapter->getStatusForProductWithSku('disabled_sku')
+        );
+    }
 }

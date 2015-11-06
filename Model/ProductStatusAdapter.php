@@ -118,4 +118,15 @@ class ProductStatusAdapter implements ProductStatusAdapterInterface
             throw new ProductStatusAdapterException($exception->getMessage());
         }
     }
+
+    /**
+     * @param string $sku
+     * @return string
+     */
+    public function getStatusForProductWithSku($sku)
+    {
+        $this->validateSku($sku);
+        $product = $this->productRepository->get($sku);
+        return $this->getStatusString($product);
+    }
 }
