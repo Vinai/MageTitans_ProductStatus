@@ -32,7 +32,7 @@ class ProductStatusManagementTest extends \PHPUnit_Framework_TestCase
 
     public function testItReturnsTheProductStatus()
     {
-        $this->mockProductStatusAdapter->method('getStatusForProductWithSku')->willReturnMap([
+        $this->mockProductStatusAdapter->method('getStatusBySku')->willReturnMap([
             ['test1', ProductStatusAdapterInterface::ENABLED],
             ['test2', ProductStatusAdapterInterface::DISABLED],
         ]);

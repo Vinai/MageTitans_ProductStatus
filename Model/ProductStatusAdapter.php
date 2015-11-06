@@ -123,7 +123,7 @@ class ProductStatusAdapter implements ProductStatusAdapterInterface
      * @param string $sku
      * @return string
      */
-    public function getStatusForProductWithSku($sku)
+    public function getStatusBySku($sku)
     {
         $this->validateSku($sku);
         $product = $this->productRepository->get($sku);

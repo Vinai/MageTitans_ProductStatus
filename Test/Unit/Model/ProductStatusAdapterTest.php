@@ -248,13 +248,13 @@ class ProductStatusAdapterTest extends \PHPUnit_Framework_TestCase
     public function testItThrowsAnExceptionIfTheSkuToGetIsNotAString()
     {
         $this->setExpectedException(InvalidSkuException::class, 'The specified SKU has to be a string');
-        $this->productStatusAdapter->getStatusForProductWithSku([]);
+        $this->productStatusAdapter->getStatusBySku([]);
     }
 
     public function testItThrowsAnExceptionIfTheSkuToGetIsEmpty()
     {
         $this->setExpectedException(InvalidSkuException::class, 'The specified SKU must not be empty');
-        $this->productStatusAdapter->getStatusForProductWithSku(' ');
+        $this->productStatusAdapter->getStatusBySku(' ');
     }
 
     public function testItReturnsTheProductStatusString()
@@ -265,11 +265,11 @@ class ProductStatusAdapterTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertSame(
             ProductStatusAdapterInterface::ENABLED,
-            $this->productStatusAdapter->getStatusForProductWithSku('enabled_sku')
+            $this->productStatusAdapter->getStatusBySku('enabled_sku')
         );
         $this->assertSame(
             ProductStatusAdapterInterface::DISABLED,
-            $this->productStatusAdapter->getStatusForProductWithSku('disabled_sku')
+            $this->productStatusAdapter->getStatusBySku('disabled_sku')
         );
     }
 }

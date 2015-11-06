@@ -24,7 +24,7 @@ class ProductStatusManagement implements ProductStatusManagementInterface
      */
     public function get($sku)
     {
-        return $this->productStatusAdapter->getStatusForProductWithSku($sku);
+        return $this->productStatusAdapter->getStatusBySku($sku);
     }
 
     /**
