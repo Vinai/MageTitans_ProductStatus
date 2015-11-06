@@ -57,7 +57,7 @@ class ProductStatusAdapter implements ProductStatusAdapterInterface
         $this->searchCriteriaBuilder->addFilter('sku', '%' . $sku . '%', 'like');
         $result = $this->productRepository->getList($this->searchCriteriaBuilder->create());
         return array_reduce($result->getItems(), function ($acc, ProductInterface $product) {
-            return array_merge($acc, [$product->getSku() => $this->getStatusString($product)]);
+            return array_merge($acc, [$product->getSku() => $this->getStatusAsString($product)]);
         }, []);
     }
 
@@ -78,7 +78,7 @@ class ProductStatusAdapter implements ProductStatusAdapterInterface
      * @param ProductInterface $product
      * @return string
      */
-    private function getStatusString(ProductInterface $product)
+    private function getStatusAsString(ProductInterface $product)
     {
         return $this->statusMap[$product->getStatus()];
     }
@@ -127,6 +127,6 @@ class ProductStatusAdapter implements ProductStatusAdapterInterface
     {
         $this->validateSku($sku);
         $product = $this->productRepository->get($sku);
-        return $this->getStatusString($product);
+        return $this->getStatusAsString($product);
     }
 }
