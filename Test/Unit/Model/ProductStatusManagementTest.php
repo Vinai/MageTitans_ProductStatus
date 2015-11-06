@@ -4,6 +4,8 @@
 namespace MageTitans\ProductStatus\Model;
 
 use MageTitans\ProductStatus\Api\ProductStatusManagementInterface;
+use MageTitans\ProductStatus\Model\Exception\ProductAlreadyDisabledException;
+use MageTitans\ProductStatus\Model\Exception\ProductAlreadyEnabledException;
 
 class ProductStatusManagementTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,5 +38,46 @@ class ProductStatusManagementTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertSame(ProductStatusAdapterInterface::ENABLED, $this->api->get('test1'));
         $this->assertSame(ProductStatusAdapterInterface::DISABLED, $this->api->get('test2'));
+    }
+
+    public function testItEnablesAProduct()
+    {
+        $this->mockProductStatusAdapter->expects($this->once())->method('enableProductWithSku')->with('test');
+        $this->api->set('test', 'enabled');
+    }
+
+    public function testItDisablesAProduct()
+    {
+        $this->mockProductStatusAdapter->expects($this->once())->method('disableProductWithSku')->with('test');
+        $this->api->set('test', 'disabled');
+    }
+
+    public function testItThrowsAnExceptionIfTheStatusIsInvalid()
+    {
+        $this->setExpectedException(
+            \InvalidArgumentException::class,
+            'The product status to set has to be "enabled" or "disabled"'
+        );
+        $this->api->set('test', 'entangled');
+    }
+
+    public function testItHidesProductAlreadyDisabledExceptions()
+    {
+        $this->mockProductStatusAdapter->method('disableProductWithSku')
+            ->willThrowException(new ProductAlreadyDisabledException('Dummy Exception'));
+        $this->assertNotNull($this->api->set('test', 'disabled'));
+    }
+
+    public function testItHidesProductAlreadyEnabledExceptions()
+    {
+        $this->mockProductStatusAdapter->method('enableProductWithSku')
+            ->willThrowException(new ProductAlreadyEnabledException('Dummy Exception'));
+        $this->assertNotNull($this->api->set('test', 'enabled'));
+    }
+
+    public function testItReturnsTheNewProductStatus()
+    {
+        $this->assertSame('enabled', $this->api->set('test', 'enabled'));
+        $this->assertSame('disabled', $this->api->set('test', 'disabled'));
     }
 }

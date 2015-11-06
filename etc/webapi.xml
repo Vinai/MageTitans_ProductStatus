@@ -7,4 +7,10 @@
             <resource ref="MageTitans_ProductStatus::product_status"/>
         </resources>
     </route>
+    <route method="PUT" url="/V1/magetitans/product/status/:sku">
+        <service class="MageTitans\ProductStatus\Api\ProductStatusManagementInterface" method="set"/>
+        <resources>
+            <resource ref="MageTitans_ProductStatus::product_status"/>
+        </resources>
+    </route>
 </routes>
