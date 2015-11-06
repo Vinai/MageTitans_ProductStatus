@@ -175,3 +175,12 @@ By following steps similar to the examples above, implement a CLI command to ena
 #### Add PUT route for product status REST resource
 
 Add a new REST API resource to set the status of products.
+
+Example call to the REST resource to enable a product.
+
+```bash
+curl -X PUT "http://magetitans2015.dev/rest/V1/magetitans/product/status/<SKU>>" \
+    -H "content-type:application/json" \
+    -H "Authorization: Bearer <TOKEN>>" \
+    -d'{"status":"enabled"}'
+```
