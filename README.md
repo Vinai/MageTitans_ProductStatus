@@ -90,7 +90,7 @@
 * [Integration Test]: Create `MageTitans\ProductStatus\Test\Integration\DiTest`
 * [Integration Test]: Test the show product status command is registered
 * Add `catalogProductStatus` command to `CommandList` arguments in `etc/di.xml`
-* Flush the config cache and run `bin/magento catalog` and check the new command is listed
+* Flush the config cache and run `bin/magento list catalog` and check the new command is listed
 
 #### Create DisableProductCommand
 
