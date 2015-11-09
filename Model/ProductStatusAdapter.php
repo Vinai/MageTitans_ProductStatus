@@ -91,7 +91,7 @@ class ProductStatusAdapter implements ProductStatusAdapterInterface
         $this->validateSku($sku);
         try {
             $product = $this->productRepository->get($sku);
-            if ($product->getStatus() === ProductStatus::STATUS_DISABLED) {
+            if ($product->getStatus() == ProductStatus::STATUS_DISABLED) {
                 throw new ProductAlreadyDisabledException(sprintf('The product "%s" already is disabled', $sku));
             }
             $product->setStatus(ProductStatus::STATUS_DISABLED);
