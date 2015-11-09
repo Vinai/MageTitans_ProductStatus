@@ -117,7 +117,7 @@
 
 * [Integration Test]: Test the disable product command is registered
 * Add `catalogProductDisable` command to `CommandList` arguments in `etc/di.xml`
-* Flush the config cache and run `bin/magento catalog` and check the new command is listed
+* Flush the config cache and run `bin/magento list catalog` and check the new command is listed
 * If still needed, workaround the issue "*Area code not set: Area code must be set before starting a session.*" by injecting `Magento\Framework\App\State` and setting the area code `adminhtml` in `ProductStatusAdapter::__construct()`. Wrap it in a try/catch block since that will be required when the class is used in the API context.
 
 #### Implement EnableProductCommand
@@ -131,7 +131,7 @@
 #### Create API resource ProductStatusManagement
 
 * Create `app/code/MageTitans/ProductStatus/Api/ProductStatusManagementInterface.php`
-* Add one public method `get($sku)` returning a string
+* Add one public method `get($sku)` returning a string (Note: Magento requires the docblock for API methods)
 * Test the class `MageTitans/ProductStatus/Model/ProductStatusManagement` exists
 * Test it implements the interface
 * Test it delegates to a new method of the product status adapter `getStatusBySku()`
